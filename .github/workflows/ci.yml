@@ -1,0 +1,18 @@
+name: ci
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and test
+        run: make test
+      - name: Build tools
+        run: make tools
+      - name: Race demo smoke test
+        run: ./build/race_demo 50000 both
