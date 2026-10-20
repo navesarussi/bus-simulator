@@ -1,19 +1,14 @@
 # Bus Simulator
 
-Educational C project for **embedded/avionics** and **platform / high-performance systems** interview prep.
+A small C11 systems project: a deterministic bus scheduler with a binary message protocol, plus a POSIX shared-memory channel between processes.
 
-Inspired by deterministic bus messaging and production debugging of shared-memory races — but **not** a MIL-STD-1553 implementation.
+Inspired by deterministic bus messaging and shared-memory races — but **not** a MIL-STD-1553 implementation.
 
-## Who this is for
-
-| Target role | Examples | What this repo demonstrates |
-|-------------|----------|-----------------------------|
-| Embedded / avionics | real-time firmware, device software | fixed layouts, checksums, deterministic scheduler |
-| Platform / systems | Vast Data, Check Point, storage, security | POSIX shared memory, atomics, torn-read detection, benchmarks |
+Built with AI assistance; I own the design and can explain every component.
 
 ## Components
 
-| Module | Interview topics |
+| Module | Topics |
 |--------|------------------|
 | `message` | binary protocols, endianness, validation, static allocation |
 | `scheduler` + `bus` | deterministic scheduling, fairness, state machines |
@@ -38,18 +33,7 @@ make bench         # single-process ring throughput
 ./build/race_demo 200000 fixed
 ```
 
-Expect `broken` to report torn reads under concurrent writer/reader processes. `fixed` uses a process-shared mutex around the critical section (same class of fix as atomic publication — serialize readers/writers on shared state).
-
-## Learning map (8 weeks)
-
-1. Message format + parser
-2. Scheduler + bus dispatch
-3. Shared memory + atomics
-4. Race demo + benchmark
-5. Valgrind + CI hardening
-6. README deep-dive + interview stories
-7. LeetCode pointers/bits
-8. Apply + iterate from real interviews
+`broken` can report torn reads under concurrent writer/reader processes (timing-dependent; a run may show zero). `fixed` uses a process-shared mutex around the critical section (same class of fix as atomic publication — serialize readers/writers on shared state).
 
 ## Message layout (big-endian on the wire)
 
@@ -63,10 +47,6 @@ Expect `broken` to report torn reads under concurrent writer/reader processes. `
 | data words | `word_count * 2` bytes |
 | checksum | 2 bytes |
 
-## Interview pitch (30 seconds)
-
-> I built a small C simulator that combines a deterministic bus scheduler with a POSIX shared-memory channel. One module intentionally reproduces torn reads under concurrent processes; the fixed path uses atomic release/acquire on a sequence word — similar to a production race I debugged on shared memory between processes.
-
 ## Status
 
 - [x] Message serialize/parse + tests
@@ -76,3 +56,7 @@ Expect `broken` to report torn reads under concurrent writer/reader processes. `
 - [x] Throughput benchmark
 - [ ] Valgrind CI job
 - [ ] Optional: mutex-based alternative to atomics
+
+## License
+
+MIT — see [`LICENSE`](LICENSE).
