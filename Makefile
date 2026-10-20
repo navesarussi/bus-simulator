@@ -1,5 +1,5 @@
 CC      := cc
-CFLAGS  := -std=c11 -Wall -Wextra -Wpedantic -Werror -Iinclude
+CFLAGS  := -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -Wpedantic -Werror -Iinclude
 LDFLAGS :=
 
 UNAME := $(shell uname)
